@@ -53,6 +53,7 @@ a{color:var(--accent)}
 var $=function(id){return document.getElementById(id)};
 var DAY=864e5;
 function parseCSV(t){
+  if(t.charCodeAt(0)===0xFEFF) t=t.slice(1);
   var out=[],row=[],f='',q=false;
   for(var i=0;i<t.length;i++){var c=t[i];
     if(q){ if(c==='"'){ if(t[i+1]==='"'){f+='"';i++} else q=false } else f+=c }
@@ -172,6 +173,7 @@ function parse(t){
 function median(a){if(!a.length) return 0;a=a.slice().sort(function(x,y){return x-y});return a[Math.floor(a.length/2)]}
 function words(s){return (s.match(/\S+/g)||[]).length}
 function load(t){
+  if(t.slice(0,2)==='PK'){UI.err('That looks like a .zip. WhatsApp sometimes exports a zip. Unzip it and drop the .txt file inside.');return}
   msgs=parse(t);
   if(msgs.length<20){UI.err('Not enough messages found. Is this a WhatsApp export (.txt)?');return}
   UI.err('');run();

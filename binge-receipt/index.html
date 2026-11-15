@@ -54,6 +54,7 @@ a{color:var(--accent)}
 var $=function(id){return document.getElementById(id)};
 var DAY=864e5;
 function parseCSV(t){
+  if(t.charCodeAt(0)===0xFEFF) t=t.slice(1);
   var out=[],row=[],f='',q=false;
   for(var i=0;i<t.length;i++){var c=t[i];
     if(q){ if(c==='"'){ if(t[i+1]==='"'){f+='"';i++} else q=false } else f+=c }
@@ -167,7 +168,7 @@ function csv(t){
 function load(t){
   var r=csv(t); if(r.length<2){UI.err('That does not look like ViewingActivity.csv.');return}
   var h=r[0].map(function(x){return x.trim().toLowerCase()}),ip=h.indexOf('profile name'),is=h.indexOf('start time'),id=h.indexOf('duration'),it=h.indexOf('title'),iv=h.indexOf('supplemental video type');
-  if(is<0||id<0||it<0){UI.err('Missing columns: need Start Time, Duration and Title.');return}
+  if(is<0||id<0||it<0){UI.err('Missing columns: need Start Time, Duration and Title. Some Netflix downloads only have Title and Date. Request the full account data download and use its ViewingActivity.csv.');return}
   rows=[];var profs={};
   for(var i=1;i<r.length;i++){var x=r[i]; if(x.length<=Math.max(is,id,it)) continue;
     var dm=(x[id]||'').match(/^(\d+):(\d\d):(\d\d)$/); if(!dm) continue; var secs=+dm[1]*3600+ +dm[2]*60+ +dm[3];
