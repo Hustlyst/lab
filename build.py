@@ -34,11 +34,11 @@ META = {
  'linkedin-wrapped': ('LinkedIn Wrapped', 'Your LinkedIn year as a shareable card: new connections, posts, reactions and comments. Totals only, never names.', 'LinkedIn data export CSVs: Connections.csv and optionally Shares, Reactions, Comments', 'LinkedIn: Settings, Data privacy, Get a copy of your data.', 'I made N new connections on LinkedIn this year. Card inside.'),
 }
 
-THEME_INIT = '<script>try{var t=localStorage.getItem("lab-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>'
+THEME_INIT = '<script>try{var t=localStorage.getItem("hustlyst-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>'
 THEME_JS = '''var r=document.documentElement,b=document.createElement('button');b.className='theme';b.type='button';
 function eff(){return r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}
 function lab(){b.textContent=eff()==='dark'?'Light mode':'Dark mode'}
-b.onclick=function(){var n=eff()==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('lab-theme',n)}catch(e){}lab()};
+b.onclick=function(){var n=eff()==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('hustlyst-theme',n)}catch(e){}lab()};
 lab();document.body.appendChild(b);'''
 TOOL_JS = '''var png=document.getElementById('png'),sh=document.getElementById('share'),out=document.getElementById('out');
 if(sh&&navigator.share){sh.hidden=false;sh.disabled=png.disabled;new MutationObserver(function(){sh.disabled=png.disabled}).observe(png,{attributes:true});
@@ -129,7 +129,7 @@ The shared code (calendar parser, card drawing, styles) lives in `../shared` in 
            '.t{display:block;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;text-decoration:none;color:var(--ink)}'
            '.t:hover{border-color:var(--accent)}.t b{display:block;font-size:18px;margin-bottom:4px}.t span{color:var(--mute);font-size:14px}</style></head>\n'
            '<body><main class="hub"><h1>The Lab</h1><p class="sub">Small, free tools that turn your own data into something worth sharing. Everything runs in your browser. Nothing is uploaded.</p>'
-           '@@CARDS@@<p class="priv">No accounts, no tracking, no network calls.</p></main>@@JS@@</body></html>\n')
+           '@@CARDS@@<p class="priv">No accounts, no tracking, no network calls.</p>''<p class="priv"><a href="https://hustlyst.com?ref=lab">Hustlyst</a> shows people who do not code how to use AI at work, one task at a time.</p>''</main>@@JS@@</body></html>\n')
     hub = hub.replace('@@CSS@@', css).replace('@@CARDS@@', cards).replace('@@JS@@', script(THEME_JS))
     open(os.path.join(ROOT, 'index.html'), 'w', encoding='utf-8').write(hub)
 
