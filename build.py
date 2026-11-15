@@ -42,7 +42,7 @@ b.onclick=function(){var n=eff()==='dark'?'light':'dark';r.setAttribute('data-th
 lab();document.body.appendChild(b);'''
 TOOL_JS = '''var png=document.getElementById('png'),sh=document.getElementById('share'),out=document.getElementById('out');
 if(sh&&navigator.share){sh.hidden=false;sh.disabled=png.disabled;new MutationObserver(function(){sh.disabled=png.disabled}).observe(png,{attributes:true});
-sh.onclick=function(){var cv=out.querySelector('canvas');if(!cv)return;var u='https://hustlyst.github.io/lab/';
+sh.onclick=function(){var cv=out.querySelector('canvas');if(!cv)return;var u='https://hustlyst.com/lab/';
 cv.toBlob(function(bl){var d={files:[new File([bl],'lab.png',{type:'image/png'})],text:'Made with the Lab '+u};
 (navigator.canShare&&navigator.canShare(d)?navigator.share(d):navigator.share({text:'Made with the Lab',url:u})).catch(function(){})})}}
 var sm=document.getElementById('sample');

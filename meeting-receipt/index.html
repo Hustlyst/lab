@@ -285,7 +285,7 @@ function toText(lines){
   }).join('\n');
 }
 function drawPNG(lines){
-  lines=lines.concat([{t:'sep'},{t:'c',l:'hustlyst.github.io/lab',cls:'m'}]);
+  lines=lines.concat([{t:'sep'},{t:'c',l:'hustlyst.com/lab',cls:'m'}]);
   var sc=2, w=440, lh=22, pad=28, h=pad*2+lines.reduce(function(a,x){return a+(x.t==='sep'?14:(/big/.test(x.cls||'')?30:lh))},0);
   var c=document.createElement('canvas'); c.width=w*sc; c.height=h*sc;
   var g=c.getContext('2d'); g.scale(sc,sc);
@@ -385,7 +385,7 @@ b.onclick=function(){var n=eff()==='dark'?'light':'dark';r.setAttribute('data-th
 lab();document.body.appendChild(b);
 var png=document.getElementById('png'),sh=document.getElementById('share');
 if(sh&&navigator.share){sh.hidden=false;sh.disabled=png.disabled;new MutationObserver(function(){sh.disabled=png.disabled}).observe(png,{attributes:true});
-sh.onclick=function(){var u='https://hustlyst.github.io/lab/';
+sh.onclick=function(){var u='https://hustlyst.com/lab/';
 var cv=window.__mr&&window.__mr.png&&window.__mr.png();if(!cv){navigator.share({text:'Made with the Lab',url:u}).catch(function(){});return}
 cv.toBlob(function(bl){var d={files:[new File([bl],'meeting-receipt.png',{type:'image/png'})],text:'Made with the Lab '+u};
 (navigator.canShare&&navigator.canShare(d)?navigator.share(d):navigator.share({text:'Made with the Lab',url:u})).catch(function(){})})}}
