@@ -1,42 +1,67 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Listening Receipt</title><meta name="description" content="Your Spotify listening history as a receipt."><meta property="og:type" content="website"><meta property="og:title" content="Listening Receipt"><meta property="og:description" content="Your Spotify listening history as a receipt."><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Listening Receipt"><meta name="twitter:description" content="Your Spotify listening history as a receipt."><script>try{var t=localStorage.getItem("hustlyst-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-<style>:root{--bg:#f4f1ea;--ink:#1c1b19;--mute:#6f6a60;--card:#fffdf8;--line:#d9d3c5;--accent:#c2410c}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#161513;--ink:#ece8de;--mute:#9a9486;--card:#1f1e1b;--line:#37342d;--accent:#fb923c}}
-:root[data-theme=dark]{--bg:#161513;--ink:#ece8de;--mute:#9a9486;--card:#1f1e1b;--line:#37342d;--accent:#fb923c;color-scheme:dark}
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Listening Receipt</title><meta name="description" content="Your Spotify listening history as a receipt."><link rel="canonical" href="https://hustlyst.com/lab/listening-receipt/"><meta property="og:type" content="website"><meta property="og:url" content="https://hustlyst.com/lab/listening-receipt/"><meta property="og:title" content="Listening Receipt"><meta property="og:description" content="Your Spotify listening history as a receipt."><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Listening Receipt"><meta name="twitter:description" content="Your Spotify listening history as a receipt."><script>try{var t=localStorage.getItem("hustlyst-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<style>/* The tool pages share the hub's notebook look: paper ground with a faint teal
+   grid, white cards with a hard dark outline and an offset shadow, rounded
+   headings, monospace for small labels. Values come from the CSS in hub.py and
+   are not invented here. The receipt and card artwork each page draws keeps its
+   own look, because that is the image people share. */
+:root{--bg:#F4EEE3;--grid:rgba(0,127,157,.11);--card:#fff;--ink:#191512;--ink2:#4B443D;--mute:#6F6456;--line:#191512;--accent:#007F9D;--ac:#007F9D;--dash:#cfc7b8;--sticker:#FFD66B;--wave:#FF8A6B;--shadow:#191512;--rule:#d9ecf1;--on-ink:#FFF6E3;--on-ac:#fff;--ac-text:#00748F}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#161513;--grid:rgba(98,196,220,.08);--card:#1f1e1b;--ink:#ece8de;--ink2:#cfc6b8;--mute:#9a9486;--line:#ece8de;--accent:#62C4DC;--ac:#62C4DC;--dash:#4a463e;--shadow:#000;--rule:rgba(98,196,220,.12);--on-ink:#161513;--on-ac:#161513;--ac-text:#62C4DC}}
+:root[data-theme=dark]{--bg:#161513;--grid:rgba(98,196,220,.08);--card:#1f1e1b;--ink:#ece8de;--ink2:#cfc6b8;--mute:#9a9486;--line:#ece8de;--accent:#62C4DC;--ac:#62C4DC;--dash:#4a463e;--shadow:#000;--rule:rgba(98,196,220,.12);--on-ink:#161513;--on-ac:#161513;--ac-text:#62C4DC;color-scheme:dark}
 :root[data-theme=light]{color-scheme:light}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-main{max-width:980px;margin:0 auto;padding:32px 16px 64px}
-h1{font-size:clamp(28px,5vw,44px);line-height:1.1;margin:0 0 8px;letter-spacing:-.02em}
-.sub{color:var(--mute);margin:0 0 24px;max-width:58ch}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Trebuchet MS",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px}
+:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+
+/* The wordmark and the way back to the bench. Relative links, so the page works
+   on its own host and under hustlyst.com/lab without being rewritten. */
+.labtop{display:flex;align-items:baseline;gap:14px;max-width:980px;margin:0 auto;padding:18px 16px 0}
+.labtop .mark{font:900 17px/1 "Arial Rounded MT Bold","Trebuchet MS",sans-serif;color:var(--ac-text);letter-spacing:.02em;text-decoration:none;white-space:nowrap}
+.labtop .back{font-size:14px;color:var(--mute);text-decoration:none;white-space:nowrap}
+.labtop .back:hover{color:var(--ink)}
+.labtop .back:before{content:"";display:inline-block;width:1px;height:11px;margin-right:14px;background:var(--dash);vertical-align:-1px}
+
+main{max-width:980px;margin:0 auto;padding:18px 16px 64px}
+h1{font:900 clamp(30px,5vw,46px)/1.05 "Arial Rounded MT Bold","Trebuchet MS",sans-serif;margin:0 0 10px;letter-spacing:0}
+h2,h3{font-family:"Arial Rounded MT Bold","Trebuchet MS",sans-serif;font-weight:900}
+.sub{color:var(--ink2);margin:0 0 24px;max-width:58ch;font-size:18px}
 .grid{display:grid;gap:24px;grid-template-columns:1fr}
 @media(min-width:860px){.grid{grid-template-columns:minmax(0,1fr) 420px;align-items:start}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px}
-.drop{border:2px dashed var(--line);border-radius:12px;padding:26px 16px;text-align:center;cursor:pointer;transition:.15s}
-.drop.over,.drop:hover,.drop:focus{border-color:var(--accent);outline:none}
-.drop strong{display:block;font-size:18px}
+.card{background:var(--card);border:2px solid var(--line);border-radius:12px;padding:20px;box-shadow:5px 5px 0 var(--shadow)}
+.drop{border:2px dashed var(--dash);border-radius:12px;padding:26px 16px;text-align:center;cursor:pointer;transition:.15s;background:var(--bg)}
+.drop.over,.drop:hover,.drop:focus{border-color:var(--ac);outline:none}
+.drop strong{display:block;font:900 18px "Arial Rounded MT Bold","Trebuchet MS",sans-serif}
 .drop span{color:var(--mute);font-size:14px}
-label{display:block;font-size:13px;color:var(--mute);margin:14px 0 4px}
-input[type=number],input[type=text],input[type=date],input[type=color],select,textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+label{display:block;font:700 12px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin:16px 0 5px}
+input[type=number],input[type=text],input[type=date],input[type=color],select,textarea{width:100%;padding:9px 10px;border:2px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
 input[type=color]{padding:2px;height:40px}
-input[type=range]{width:100%}
+input[type=range]{width:100%;accent-color:var(--ac)}
+input[type=checkbox],input[type=radio]{accent-color:var(--ac)}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .chk{display:flex;gap:8px;align-items:center;margin-top:14px;font-size:14px}
-.chk label{margin:0;color:var(--ink)}
-button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:9px 14px}
+.chk label{margin:0;color:var(--ink);font:inherit;text-transform:none;letter-spacing:0}
+button{font:800 15px "Arial Rounded MT Bold","Trebuchet MS",sans-serif;cursor:pointer;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);padding:9px 16px}
+button:hover{border-color:var(--ac)}
 button:disabled{opacity:.5;cursor:default}
-button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+button:disabled:hover{border-color:var(--line)}
+/* In dark mode the accent is a light teal, so white text on it would be unreadable. */
+button.primary{background:var(--ac);border-color:var(--ac);color:var(--on-ac)}
+button.primary:hover{border-color:var(--ac)}
 .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
-.note{font-size:13px;color:var(--mute);margin-top:14px}
-.err{color:#b91c1c;font-size:14px;margin-top:10px;min-height:1px}
+.note{font:13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--mute);margin-top:14px}
+.err{color:#b3261e;font-size:14px;margin-top:10px;min-height:1px}
 .preview{min-height:160px;display:flex;align-items:center;justify-content:center;color:var(--mute);text-align:center}
-a{color:var(--accent)}
-.priv{font-size:13px;color:var(--mute);margin-top:28px;border-top:1px solid var(--line);padding-top:14px}
-
-.theme{position:fixed;top:12px;right:12px;z-index:5;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}.priv.offline{margin:-8px 0 16px}
+a{color:var(--ac-text)}
+.priv{font:13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--mute);margin-top:28px;border-top:2px dashed var(--dash);padding-top:14px}
+/* Pinned bottom right, where the hub pins it, so it never crowds the wordmark
+   strip or a site menu sitting above the page. */
+.theme{position:fixed;bottom:14px;right:14px;z-index:5;background:var(--card);color:var(--ink);border:2px solid var(--line);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+.priv.offline{margin:-8px 0 16px}
 .priv.offline,#samplenote{border:0;padding:0}
+@media (prefers-reduced-motion:reduce){.drop{transition:none}}
 </style></head>
-<body><main>
+<body><div class="labtop"><a class="mark" href="../">HUSTLYST LAB</a><a class="back" href="../">All experiments</a></div><main>
 <h1>Listening Receipt</h1>
 <p class="sub">Your Spotify listening as a receipt: hours, top artists, top tracks and how much of it happened after midnight. Read in your browser, never uploaded.</p><p class="priv offline">Works offline. Your file is read in this browser and never uploaded.</p>
 <div class="grid">

@@ -13,6 +13,10 @@ ICSDROP = '''<div class="drop" id="drop" tabindex="0" role="button" aria-label="
 <div class="btns"><button id="sample">Try with a sample calendar</button></div><div class="err" id="err" role="alert"></div>'''
 ACTIONS = '<div class="btns" style="justify-content:center"><button class="primary" id="png" disabled>Download image</button><button id="copy" disabled>Copy text</button><button id="share" hidden disabled>Share</button></div>'
 FOOT = '<p class="priv">Runs entirely in your browser. Nothing is uploaded and there is no tracking.</p>'
+# Every tool page carries the Lab wordmark and a way back to the bench, so a
+# visitor who arrives on a tool from a search or a shared card knows where it
+# came from. The links are relative, so they hold on any host.
+LABTOP = '<div class="labtop"><a class="mark" href="../">HUSTLYST LAB</a><a class="back" href="../">All experiments</a></div>'
 
 # slug: (title, one-line pitch, input, how to get it, hook for the launch post)
 META = {
@@ -51,11 +55,18 @@ var gone=function(){var x=document.getElementById('samplenote');if(x)x.remove()}
 if(f)f.addEventListener('change',gone);if(d)d.addEventListener('drop',gone)}}'''
 def script(js): return '<script>(function(){' + js + '})()</script>'
 
-def og(title, desc):
+HOME = 'https://hustlyst.com/lab/'
+
+def og(title, desc, slug=None):
+    """Head tags for one page. The canonical link and og:url name hustlyst.com as
+    the Lab's home, so a search engine or a link preview that meets a copy on
+    another host still points people at the real one."""
     t, d = html.escape(title, True), html.escape(desc, True)
-    return ('<meta property="og:type" content="website"><meta property="og:title" content="%s">'
+    url = HOME if slug is None else HOME + slug + '/'
+    return ('<link rel="canonical" href="%s"><meta property="og:type" content="website"><meta property="og:url" content="%s">'
+            '<meta property="og:title" content="%s">'
             '<meta property="og:description" content="%s"><meta name="twitter:card" content="summary">'
-            '<meta name="twitter:title" content="%s"><meta name="twitter:description" content="%s">' % (t, d, t, d))
+            '<meta name="twitter:title" content="%s"><meta name="twitter:description" content="%s">' % (url, url, t, d, t, d))
 
 def build():
     shared = {'/*@ICS*/': rd('shared', 'ics.js'), '/*@CARD*/': rd('shared', 'card.js')}
@@ -76,8 +87,8 @@ def build():
         src += script(TOOL_JS + THEME_JS)
         page = ('<!doctype html>\n<html lang="en"><head><meta charset="utf-8">'
                 '<meta name="viewport" content="width=device-width, initial-scale=1">'
-                '<title>%s</title><meta name="description" content="%s">%s\n<style>%s</style></head>\n<body><main>\n%s\n</main></body></html>\n'
-                % (html.escape(t), html.escape(d), og(t, d) + THEME_INIT, css, src))
+                '<title>%s</title><meta name="description" content="%s">%s\n<style>%s</style></head>\n<body>%s<main>\n%s\n</main></body></html>\n'
+                % (html.escape(t), html.escape(d), og(t, d, slug) + THEME_INIT, css, LABTOP, src))
         os.makedirs(os.path.join(ROOT, slug), exist_ok=True)
         open(os.path.join(ROOT, slug, 'index.html'), 'w', encoding='utf-8').write(page)
         readme = f'''# {title}
