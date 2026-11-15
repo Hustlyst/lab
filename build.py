@@ -39,6 +39,13 @@ META = {
 }
 
 THEME_INIT = '<script>try{var t=localStorage.getItem("hustlyst-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>'
+# GitHub Pages still serves a copy of the Lab at hustlyst.github.io/lab, because
+# cards already shared print that address. A visitor who lands there is sent to
+# the same page on hustlyst.com, the Lab's home. The check names that one host,
+# so the pages still work opened from disk or served anywhere else.
+FORWARD = ('<script>if(location.hostname==="hustlyst.github.io")'
+           'location.replace("https://hustlyst.com"+location.pathname+location.search+location.hash)</script>')
+HEAD_INIT = FORWARD + THEME_INIT
 THEME_JS = '''var r=document.documentElement,b=document.createElement('button');b.className='theme';b.type='button';
 function eff(){return r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}
 function lab(){b.textContent=eff()==='dark'?'Light mode':'Dark mode'}
@@ -97,7 +104,7 @@ def build():
         page = ('<!doctype html>\n<html lang="en"><head><meta charset="utf-8">'
                 '<meta name="viewport" content="width=device-width, initial-scale=1">'
                 '<title>%s</title><meta name="description" content="%s">%s\n<style>%s</style></head>\n<body>%s<main>\n%s\n</main></body></html>\n'
-                % (html.escape(t), html.escape(d), og(t, d, slug) + THEME_INIT, css, LABTOP, src))
+                % (html.escape(t), html.escape(d), og(t, d, slug) + HEAD_INIT, css, LABTOP, src))
         os.makedirs(os.path.join(ROOT, slug), exist_ok=True)
         open(os.path.join(ROOT, slug, 'index.html'), 'w', encoding='utf-8').write(page)
         readme = f'''# {title}
@@ -132,7 +139,7 @@ The shared code (calendar parser, card drawing, styles) lives in `../shared` in 
         print('built', slug)
     # hub
     import hub
-    page = hub.render(META, lambda s: os.path.exists(os.path.join(ROOT, s, 'index.html')), THEME_INIT, THEME_JS, og)
+    page = hub.render(META, lambda s: os.path.exists(os.path.join(ROOT, s, 'index.html')), HEAD_INIT, THEME_JS, og)
     open(os.path.join(ROOT, 'index.html'), 'w', encoding='utf-8').write(page)
 
 if __name__ == '__main__':
