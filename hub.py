@@ -111,14 +111,14 @@ def render(meta, root_exists, theme_init, theme_js, og):
         title = meta[s][0]
         stat, keys, mins, pitch = CARD[s]
         need = ', '.join(keys) if keys else 'none'
-        return ('<a class="e" href="%s/index.html" data-k="%s"><div class="tag">EXPERIMENT %02d</div><div class="st">%s</div>'
+        return ('<a class="e" href="%s/" data-k="%s"><div class="tag">EXPERIMENT %02d</div><div class="st">%s</div>'
                 '<div class="stat">%s</div><h4>%s</h4><p>%s</p><div class="need">Ingredients: %s</div></a>'
                 % (s, '|'.join(keys), num[s], mins, html.escape(stat), html.escape(title), html.escape(pitch), html.escape(need)))
     secs = ''.join('<section class="bench"><h2 class="sec">%s</h2><div class="g">%s</div></section>'
                    % (name, ''.join(card(s) for s in ss if root_exists(s))) for name, ss in SECTIONS)
     chips = '<button type="button" class="chip" data-k="all" aria-pressed="true">all</button>' + ''.join(
         '<button type="button" class="chip" data-k="%s" aria-pressed="false">%s</button>' % (c, c) for c in CHIPS)
-    nb = lambda s: '<a class="plain" href="%s/index.html"><h3>%s</h3><p>%s</p></a>' % (s, html.escape(meta[s][0]), html.escape(CARD[s][3]))
+    nb = lambda s: '<a class="plain" href="%s/"><h3>%s</h3><p>%s</p></a>' % (s, html.escape(meta[s][0]), html.escape(CARD[s][3]))
     desc = 'Small experiments that turn your own data into something worth sharing. Everything runs in your browser.'
     return ('<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
         '<title>The Lab</title><meta name="description" content="%s">%s%s\n<style>%s</style></head>\n<body><div class="w">'
@@ -128,7 +128,7 @@ def render(meta, root_exists, theme_init, theme_js, og):
         '<div class="chips" role="group" aria-label="Filter by what you have">%s</div>'
         '<p class="note">The numbers on the cards are examples. <span id="count" aria-live="polite"></span></p>'
         '<div class="layout"><div>'
-        '<div class="nb first"><small>TODAY\'S EXPERIMENT</small><a class="plain" id="today" href="work-wrapped/index.html"><h3 id="today-name">Work Wrapped</h3><p id="today-desc">Your year in meetings, wrapped.</p></a>'
+        '<div class="nb first"><small>TODAY\'S EXPERIMENT</small><a class="plain" id="today" href="work-wrapped/"><h3 id="today-name">Work Wrapped</h3><p id="today-desc">Your year in meetings, wrapped.</p></a>'
         '<a class="btn p" href="#" id="todaybtn" onclick="location.href=document.getElementById(\'today\').href;return false">Try it</a><button type="button" class="btn" id="surprise">Surprise me</button></div>'
         '<div class="nb"><small>NEWEST</small>%s</div><div class="nb"><small>NO FILE NEEDED</small>%s</div></div>'
         '<div>%s</div></div>'
