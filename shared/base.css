@@ -28,3 +28,4 @@ button.primary{background:var(--accent);border-color:var(--accent);color:#fff;fo
 .preview{min-height:160px;display:flex;align-items:center;justify-content:center;color:var(--mute);text-align:center}
 a{color:var(--accent)}
 .priv{font-size:13px;color:var(--mute);margin-top:28px;border-top:1px solid var(--line);padding-top:14px}
+
