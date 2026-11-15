@@ -1,11 +1,5 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Meeting Receipt</title><script>try{var t=localStorage.getItem("hustlyst-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-<meta name="description" content="Drop in your calendar and get a receipt for what your meetings really cost. Runs in your browser. Nothing is uploaded.">
-<link rel="canonical" href="https://hustlyst.com/lab/meeting-receipt/"><meta property="og:type" content="website"><meta property="og:url" content="https://hustlyst.com/lab/meeting-receipt/"><meta property="og:title" content="Meeting Receipt"><meta property="og:description" content="Drop in your calendar and get a receipt for what your meetings really cost. Runs in your browser. Nothing is uploaded."><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Meeting Receipt"><meta name="twitter:description" content="Drop in your calendar and get a receipt for what your meetings really cost. Runs in your browser. Nothing is uploaded.">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Meeting Receipt</title><meta name="description" content="Drop in your calendar and get a receipt for what your meetings really cost. Runs in your browser. Nothing is uploaded."><link rel="canonical" href="https://hustlyst.com/lab/meeting-receipt/"><meta property="og:type" content="website"><meta property="og:url" content="https://hustlyst.com/lab/meeting-receipt/"><meta property="og:title" content="Meeting Receipt"><meta property="og:description" content="Drop in your calendar and get a receipt for what your meetings really cost. Runs in your browser. Nothing is uploaded."><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Meeting Receipt"><meta name="twitter:description" content="Drop in your calendar and get a receipt for what your meetings really cost. Runs in your browser. Nothing is uploaded."><script>try{var t=localStorage.getItem("hustlyst-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 <style>/* The tool pages share the hub's notebook look: paper ground with a faint teal
    grid, white cards with a hard dark outline and an offset shadow, rounded
    headings, monospace for small labels. Values come from the CSS in hub.py and
@@ -66,7 +60,9 @@ a{color:var(--ac-text)}
 .priv.offline{margin:-8px 0 16px}
 .priv.offline,#samplenote{border:0;padding:0}
 @media (prefers-reduced-motion:reduce){.drop{transition:none}}
-
+</style></head>
+<body><div class="labtop"><a class="mark" href="../">HUSTLYST LAB</a><a class="back" href="../">All experiments</a></div><main>
+<style>
 /* This page only: the printed receipt, which keeps its own paper look. */
 :root{--paper:#fffefa}
 :root[data-theme=dark]{--paper:#f6f2e7}
@@ -82,12 +78,8 @@ a{color:var(--ac-text)}
 .receipt .m{color:#6f6a60}
 .empty{color:#6f6a60;text-align:center;padding:40px 0}
 </style>
-</head>
-<body>
-<div class="labtop"><a class="mark" href="../">HUSTLYST LAB</a><a class="back" href="../">All experiments</a></div>
-<main>
   <h1>Meeting Receipt</h1>
-  <p class="sub">Drop in your calendar and see what your meetings really cost, in hours and money. It runs in your browser. Your calendar never leaves this page.</p>
+  <p class="sub">Drop in your calendar and see what your meetings really cost, in hours and money. It runs in your browser. Your calendar never leaves this page.</p><p class="priv offline">Works offline. Your file is read in this browser and never uploaded.</p>
 
   <div class="grid">
     <section class="card">
@@ -131,8 +123,7 @@ a{color:var(--ac-text)}
       </div>
     </section>
   </div>
-</main>
-
+<p class="priv">Runs entirely in your browser. Nothing is uploaded and there is no tracking.</p>
 <script>
 (function(){
 'use strict';
@@ -414,21 +405,21 @@ $('copy').addEventListener('click',function(){
   (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Copied'},function(){b.textContent='Copy failed'});
   setTimeout(function(){b.textContent='Copy text'},1500);
 });
+window.__labPNG=function(){return lastLines?drawPNG(lastLines):null};
 window.__mr={parseICS:parseICS,analyse:analyse,occurrences:occurrences,load:load,png:function(){return lastLines?drawPNG(lastLines):null}};
 })();
-(function(){
-var r=document.documentElement,b=document.createElement('button');b.className='theme';b.type='button';
+</script>
+<script>(function(){var png=document.getElementById('png'),sh=document.getElementById('share'),out=document.getElementById('out');
+if(sh&&navigator.share){sh.hidden=false;sh.disabled=png.disabled;new MutationObserver(function(){sh.disabled=png.disabled}).observe(png,{attributes:true});
+sh.onclick=function(){var cv=window.__labPNG?window.__labPNG():out&&out.querySelector('canvas');var u='https://hustlyst.com/lab/';if(!cv){navigator.share({text:'Made with the Lab',url:u}).catch(function(){});return}
+cv.toBlob(function(bl){var d={files:[new File([bl],'lab.png',{type:'image/png'})],text:'Made with the Lab '+u};
+(navigator.canShare&&navigator.canShare(d)?navigator.share(d):navigator.share({text:'Made with the Lab',url:u})).catch(function(){})})}}
+var sm=document.getElementById('sample');
+if(sm&&out&&!out.querySelector('canvas')){sm.click();{var n=document.createElement('p');n.className='priv';n.id='samplenote';n.textContent='Showing sample data. Add your own file to see yours.';out.parentNode.insertBefore(n,out);
+var gone=function(){var x=document.getElementById('samplenote');if(x)x.remove()};var f=document.getElementById('file'),d=document.getElementById('drop');
+if(f)f.addEventListener('change',gone);if(d)d.addEventListener('drop',gone)}}var r=document.documentElement,b=document.createElement('button');b.className='theme';b.type='button';
 function eff(){return r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}
 function lab(){b.textContent=eff()==='dark'?'Light mode':'Dark mode'}
 b.onclick=function(){var n=eff()==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('hustlyst-theme',n)}catch(e){}lab()};
-lab();document.body.appendChild(b);
-var png=document.getElementById('png'),sh=document.getElementById('share');
-if(sh&&navigator.share){sh.hidden=false;sh.disabled=png.disabled;new MutationObserver(function(){sh.disabled=png.disabled}).observe(png,{attributes:true});
-sh.onclick=function(){var u='https://hustlyst.com/lab/';
-var cv=window.__mr&&window.__mr.png&&window.__mr.png();if(!cv){navigator.share({text:'Made with the Lab',url:u}).catch(function(){});return}
-cv.toBlob(function(bl){var d={files:[new File([bl],'meeting-receipt.png',{type:'image/png'})],text:'Made with the Lab '+u};
-(navigator.canShare&&navigator.canShare(d)?navigator.share(d):navigator.share({text:'Made with the Lab',url:u})).catch(function(){})})}}
-})();
-</script>
-</body>
-</html>
+lab();document.body.appendChild(b);})()</script>
+</main></body></html>
