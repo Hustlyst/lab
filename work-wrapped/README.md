@@ -7,7 +7,7 @@ Open `index.html` in any browser. It is one file with no dependencies, so it als
 ## Use it
 
 - **You bring:** A calendar .ics export.
-- **How to get it:** Google Calendar: Settings, Import and export, Export. Outlook: Calendar, Share or Publish, save as .ics. Apple Calendar: File, Export.
+- **How to get it:** Google Calendar on a computer: Settings, Import & export, Export, then unzip the download. Outlook desktop: File, Save Calendar. Apple Calendar on a Mac: pick a calendar, File, Export, Export.
 - **You get:** a card or receipt you can download as an image or copy as text.
 
 ## Privacy

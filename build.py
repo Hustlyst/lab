@@ -9,7 +9,7 @@ import os, re, html
 ROOT = os.path.dirname(os.path.abspath(__file__))
 rd = lambda *p: open(os.path.join(ROOT, *p), encoding='utf-8').read()
 
-ICSDROP = '''<div class="drop" id="drop" tabindex="0" role="button" aria-label="Choose a calendar file"><strong>Drop a calendar file here</strong><span>.ics export from Google Calendar, Outlook or Apple Calendar. Or click to choose.</span><input id="file" type="file" accept=".ics,text/calendar" hidden></div>
+ICSDROP = '''<div class="drop" id="drop" tabindex="0" role="button" aria-label="Choose a calendar file"><strong>Drop a calendar file here</strong><span>Google Calendar on a computer: Settings, Import &amp; export, Export, then unzip the download. Outlook desktop: File, Save Calendar. Apple Calendar on a Mac: pick a calendar, File, Export, Export. Or click to choose.</span><input id="file" type="file" accept=".ics,text/calendar" hidden></div>
 <div class="btns"><button id="sample">Try with a sample calendar</button></div><div class="err" id="err" role="alert"></div>'''
 ACTIONS = '<div class="btns" style="justify-content:center"><button class="primary" id="png" disabled>Download image</button><button id="copy" disabled>Copy text</button><button id="share" hidden disabled>Share</button></div>'
 FOOT = '<p class="priv">Runs entirely in your browser. Nothing is uploaded and there is no tracking.</p>'
@@ -17,7 +17,7 @@ FOOT = '<p class="priv">Runs entirely in your browser. Nothing is uploaded and t
 # slug: (title, one-line pitch, input, how to get it, hook for the launch post)
 META = {
  'meeting-receipt': ('Meeting Receipt', 'What your meetings really cost, as a receipt. Drop in a calendar and set your hourly rate.', 'A calendar .ics export', 'Same export as Work Wrapped.', 'My meetings cost N this month.'),
- 'work-wrapped': ('Work Wrapped', 'Your year in meetings as a shareable card, Spotify Wrapped style.', 'A calendar .ics export', 'Google Calendar: Settings, Import and export, Export. Outlook: Calendar, Share or Publish, save as .ics. Apple Calendar: File, Export.', 'I spent N working days in meetings this year. What is yours?'),
+ 'work-wrapped': ('Work Wrapped', 'Your year in meetings as a shareable card, Spotify Wrapped style.', 'A calendar .ics export', 'Google Calendar on a computer: Settings, Import & export, Export, then unzip the download. Outlook desktop: File, Save Calendar. Apple Calendar on a Mac: pick a calendar, File, Export, Export.', 'I spent N working days in meetings this year. What is yours?'),
  'calendar-horoscope': ('Calendar Horoscope', 'Your calendar reveals your work personality, lucky hour and what to avoid.', 'A calendar .ics export', 'Same export as Work Wrapped.', 'My calendar says I am The Marathoner. What are you?'),
  'could-it-be-an-email': ('Could It Have Been an Email?', 'One score for how much of your calendar could have been an email.', 'A calendar .ics export', 'Same export as Work Wrapped.', 'My calendar scores 42%. Post yours.'),
  'meeting-bingo': ('Meeting Bingo', 'A shareable bingo card of the phrases every meeting produces. Same seed gives friends the same card.', 'Nothing, or your own phrases', 'Open it, click phrases as you hear them, share the link.', 'Playing this in my 2pm. Join in with the link.'),

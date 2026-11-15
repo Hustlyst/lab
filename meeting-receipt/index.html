@@ -3,12 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Meeting Receipt</title>
+<title>Meeting Receipt</title><script>try{var t=localStorage.getItem("lab-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 <meta name="description" content="Drop in your calendar and get a receipt for what your meetings really cost. Runs in your browser. Nothing is uploaded.">
 <meta property="og:type" content="website"><meta property="og:title" content="Meeting Receipt"><meta property="og:description" content="Drop in your calendar and get a receipt for what your meetings really cost. Runs in your browser. Nothing is uploaded."><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Meeting Receipt"><meta name="twitter:description" content="Drop in your calendar and get a receipt for what your meetings really cost. Runs in your browser. Nothing is uploaded.">
 <style>
 :root{--bg:#f4f1ea;--ink:#1c1b19;--mute:#6f6a60;--card:#fffdf8;--line:#d9d3c5;--accent:#c2410c;--paper:#fffefa}
-@media (prefers-color-scheme:dark){:root{--bg:#161513;--ink:#ece8de;--mute:#9a9486;--card:#1f1e1b;--line:#37342d;--accent:#fb923c;--paper:#f6f2e7}}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#161513;--ink:#ece8de;--mute:#9a9486;--card:#1f1e1b;--line:#37342d;--accent:#fb923c;--paper:#f6f2e7}}
+:root[data-theme=dark]{--bg:#161513;--ink:#ece8de;--mute:#9a9486;--card:#1f1e1b;--line:#37342d;--accent:#fb923c;--paper:#f6f2e7;color-scheme:dark}:root[data-theme=light]{color-scheme:light}
+.theme{position:fixed;top:12px;right:12px;z-index:5;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 main{max-width:980px;margin:0 auto;padding:32px 16px 64px}
@@ -52,13 +54,13 @@ a{color:var(--accent)}
     <section class="card">
       <div class="drop" id="drop" tabindex="0" role="button" aria-label="Choose a calendar file">
         <strong>Drop a calendar file here</strong>
-        <span>.ics export from Google Calendar, Outlook or Apple Calendar. Or click to choose.</span>
+        <span>A calendar .ics file. Steps below. Or click to choose.</span>
         <input id="file" type="file" accept=".ics,text/calendar" hidden>
       </div>
       <ol class="steps">
-        <li>Google Calendar: Settings, Import and export, Export.</li>
-        <li>Outlook: Calendar, Share or Publish, save as .ics.</li>
-        <li>Apple Calendar: File, Export, Export.</li>
+        <li>Google Calendar, on a computer: Settings, Import &amp; export, Export, then unzip the download.</li>
+        <li>Outlook desktop: File, Save Calendar.</li>
+        <li>Apple Calendar on a Mac: pick a calendar, File, Export, Export.</li>
       </ol>
       <div class="btns"><button id="sample">Try with sample data</button></div>
       <div class="err" id="err" role="alert"></div>
@@ -86,6 +88,7 @@ a{color:var(--accent)}
       <div class="btns">
         <button class="primary" id="png" disabled>Download image</button>
         <button id="copy" disabled>Copy text</button>
+        <button id="share" hidden disabled>Share</button>
       </div>
     </section>
   </div>
@@ -282,6 +285,7 @@ function toText(lines){
   }).join('\n');
 }
 function drawPNG(lines){
+  lines=lines.concat([{t:'sep'},{t:'c',l:'theanirudhkumar.github.io/lab',cls:'m'}]);
   var sc=2, w=440, lh=22, pad=28, h=pad*2+lines.reduce(function(a,x){return a+(x.t==='sep'?14:(/big/.test(x.cls||'')?30:lh))},0);
   var c=document.createElement('canvas'); c.width=w*sc; c.height=h*sc;
   var g=c.getContext('2d'); g.scale(sc,sc);
@@ -371,7 +375,20 @@ $('copy').addEventListener('click',function(){
   (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Copied'},function(){b.textContent='Copy failed'});
   setTimeout(function(){b.textContent='Copy text'},1500);
 });
-window.__mr={parseICS:parseICS,analyse:analyse,occurrences:occurrences,load:load};
+window.__mr={parseICS:parseICS,analyse:analyse,occurrences:occurrences,load:load,png:function(){return lastLines?drawPNG(lastLines):null}};
+})();
+(function(){
+var r=document.documentElement,b=document.createElement('button');b.className='theme';b.type='button';
+function eff(){return r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}
+function lab(){b.textContent=eff()==='dark'?'Light mode':'Dark mode'}
+b.onclick=function(){var n=eff()==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('lab-theme',n)}catch(e){}lab()};
+lab();document.body.appendChild(b);
+var png=document.getElementById('png'),sh=document.getElementById('share');
+if(sh&&navigator.share){sh.hidden=false;sh.disabled=png.disabled;new MutationObserver(function(){sh.disabled=png.disabled}).observe(png,{attributes:true});
+sh.onclick=function(){var u='https://theanirudhkumar.github.io/lab/';
+var cv=window.__mr&&window.__mr.png&&window.__mr.png();if(!cv){navigator.share({text:'Made with the Lab',url:u}).catch(function(){});return}
+cv.toBlob(function(bl){var d={files:[new File([bl],'meeting-receipt.png',{type:'image/png'})],text:'Made with the Lab '+u};
+(navigator.canShare&&navigator.canShare(d)?navigator.share(d):navigator.share({text:'Made with the Lab',url:u})).catch(function(){})})}}
 })();
 </script>
 </body>
