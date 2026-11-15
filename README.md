@@ -4,7 +4,7 @@
 
 Small, free tools that turn your own data into something worth sharing. Sixteen of them, plus five skills for the same ideas inside an AI tool. Everything runs in the browser, nothing is uploaded, and each tool is one file with no dependencies.
 
-**Try it: https://hustlyst.github.io/lab/**
+**Try it: [hustlyst.com/lab](https://go.hustlyst.com/lab?ref=github)**
 
 ![The Lab hub, with the tools grouped by what they read](docs/hub.png)
 
