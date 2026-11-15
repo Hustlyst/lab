@@ -20,7 +20,7 @@ LABTOP = '<div class="labtop"><a class="mark" href="../">HUSTLYST LAB</a><a clas
 
 # slug: (title, one-line pitch, input, how to get it, hook for the launch post)
 META = {
- 'meeting-receipt': ('Meeting Receipt', 'What your meetings really cost, as a receipt. Drop in a calendar and set your hourly rate.', 'A calendar .ics export', 'Same export as Work Wrapped.', 'My meetings cost N this month.'),
+ 'meeting-receipt': ('Meeting Receipt', 'What your meetings really cost, as a receipt. Drop in a calendar and set an hourly rate, or enter yearly pay and it converts.', 'A calendar .ics export', 'Same export as Work Wrapped.', 'My meetings cost N this month.'),
  'work-wrapped': ('Work Wrapped', 'Your year in meetings as a shareable card, Spotify Wrapped style.', 'A calendar .ics export', 'Google Calendar on a computer: Settings, Import & export, Export, then unzip the download. Outlook desktop: File, Save Calendar. Apple Calendar on a Mac: pick a calendar, File, Export, Export.', 'I spent N working days in meetings this year. What is yours?'),
  'calendar-horoscope': ('Calendar Horoscope', 'Your calendar reveals your work personality, lucky hour and what to avoid.', 'A calendar .ics export', 'Same export as Work Wrapped.', 'My calendar says I am The Marathoner. What are you?'),
  'could-it-be-an-email': ('Could It Have Been an Email?', 'One score for how much of your calendar could have been an email.', 'A calendar .ics export', 'Same export as Work Wrapped.', 'My calendar scores 42%. Post yours.'),
@@ -46,7 +46,7 @@ b.onclick=function(){var n=eff()==='dark'?'light':'dark';r.setAttribute('data-th
 lab();document.body.appendChild(b);'''
 TOOL_JS = '''var png=document.getElementById('png'),sh=document.getElementById('share'),out=document.getElementById('out');
 if(sh&&navigator.share){sh.hidden=false;sh.disabled=png.disabled;new MutationObserver(function(){sh.disabled=png.disabled}).observe(png,{attributes:true});
-sh.onclick=function(){var cv=out.querySelector('canvas');if(!cv)return;var u='https://hustlyst.com/lab/';
+sh.onclick=function(){var cv=window.__labPNG?window.__labPNG():out&&out.querySelector('canvas');var u='https://hustlyst.com/lab/';if(!cv){navigator.share({text:'Made with the Lab',url:u}).catch(function(){});return}
 cv.toBlob(function(bl){var d={files:[new File([bl],'lab.png',{type:'image/png'})],text:'Made with the Lab '+u};
 (navigator.canShare&&navigator.canShare(d)?navigator.share(d):navigator.share({text:'Made with the Lab',url:u})).catch(function(){})})}}
 var sm=document.getElementById('sample');
@@ -54,6 +54,13 @@ if(sm&&out&&!out.querySelector('canvas')){sm.click();{var n=document.createEleme
 var gone=function(){var x=document.getElementById('samplenote');if(x)x.remove()};var f=document.getElementById('file'),d=document.getElementById('drop');
 if(f)f.addEventListener('change',gone);if(d)d.addEventListener('drop',gone)}}'''
 def script(js): return '<script>(function(){' + js + '})()</script>'
+
+def skill_note(slug):
+    """A line pointing at the matching AI skill, for the tools that have one."""
+    if not os.path.exists(os.path.join(ROOT, 'skills', slug, 'SKILL.md')):
+        return ''
+    return ('\n## Use it with an AI assistant\n\nThe matching skill, `../skills/%s/SKILL.md`, '
+            'does the same from a connected account, without exporting a file.\n' % slug)
 
 HOME = 'https://hustlyst.com/lab/'
 
@@ -74,7 +81,9 @@ def build():
     for slug, (title, pitch, inp, how, hook) in META.items():
         path = os.path.join(ROOT, 'src', slug + '.html')
         if not os.path.exists(path):
-            continue
+            # A tool with no source file would keep whatever page is committed and
+            # silently miss every change to the shared styles and scripts.
+            raise SystemExit('No src/%s.html for a tool listed in META. Every tool is built from src.' % slug)
         src = rd('src', slug + '.html')
         m = re.match(r'<!-- title: (.*?) \| (.*?) -->\n', src)
         t, d = (m.group(1), m.group(2)) if m else (title, pitch)
@@ -118,7 +127,7 @@ Everything runs in the browser. Nothing is uploaded, there are no network calls 
 3. Post the hook with your own card attached.
 
 The shared code (calendar parser, card drawing, styles) lives in `../shared` in the lab and is inlined into each page by `build.py`. After editing anything in `src` or `shared`, run `python3 build.py` from the lab folder.
-'''
+''' + skill_note(slug)
         open(os.path.join(ROOT, slug, 'README.md'), 'w', encoding='utf-8').write(readme)
         print('built', slug)
     # hub

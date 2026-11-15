@@ -25,3 +25,7 @@ Everything runs in the browser. Nothing is uploaded, there are no network calls 
 3. Post the hook with your own card attached.
 
 The shared code (calendar parser, card drawing, styles) lives in `../shared` in the lab and is inlined into each page by `build.py`. After editing anything in `src` or `shared`, run `python3 build.py` from the lab folder.
+
+## Use it with an AI assistant
+
+The matching skill, `../skills/inbox-receipt/SKILL.md`, does the same from a connected account, without exporting a file.

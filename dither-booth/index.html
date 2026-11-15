@@ -248,7 +248,7 @@ $('png').addEventListener('click',function(){if(canvas) Card.download(canvas,'di
 </script>
 <script>(function(){var png=document.getElementById('png'),sh=document.getElementById('share'),out=document.getElementById('out');
 if(sh&&navigator.share){sh.hidden=false;sh.disabled=png.disabled;new MutationObserver(function(){sh.disabled=png.disabled}).observe(png,{attributes:true});
-sh.onclick=function(){var cv=out.querySelector('canvas');if(!cv)return;var u='https://hustlyst.com/lab/';
+sh.onclick=function(){var cv=window.__labPNG?window.__labPNG():out&&out.querySelector('canvas');var u='https://hustlyst.com/lab/';if(!cv){navigator.share({text:'Made with the Lab',url:u}).catch(function(){});return}
 cv.toBlob(function(bl){var d={files:[new File([bl],'lab.png',{type:'image/png'})],text:'Made with the Lab '+u};
 (navigator.canShare&&navigator.canShare(d)?navigator.share(d):navigator.share({text:'Made with the Lab',url:u})).catch(function(){})})}}
 var sm=document.getElementById('sample');

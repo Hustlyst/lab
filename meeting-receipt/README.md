@@ -1,7 +1,31 @@
 # Meeting Receipt
 
-What your meetings really cost, in hours and money, as a receipt you can share.
+What your meetings really cost, as a receipt. Drop in a calendar and set an hourly rate, or enter yearly pay and it converts.
 
-Open `index.html` in any browser. Drop in a calendar `.ics` export, set a cost per person-hour (or enter yearly pay and it converts), and download the receipt as an image or copy it as text. Nothing is uploaded.
+Open `index.html` in any browser. It is one file with no dependencies, so it also works hosted on GitHub Pages or any static host.
 
-This tool is hand-written rather than built from `src`, so `build.py` leaves it alone. The matching skill is `../skills/meeting-receipt/SKILL.md`, which reads a connected calendar read-only and asks for the hourly rate first.
+## Use it
+
+- **You bring:** A calendar .ics export.
+- **How to get it:** Same export as Work Wrapped.
+- **You get:** a card or receipt you can download as an image or copy as text.
+
+## Privacy
+
+Everything runs in the browser. Nothing is uploaded, there are no network calls and no tracking. Reading a file means the browser reads it locally and never sends it anywhere.
+
+## Launch hook
+
+"My meetings cost N this month."
+
+## Ship it
+
+1. Create an empty repository named `meeting-receipt` and copy this folder into it.
+2. Turn on GitHub Pages (main branch, root) or upload `index.html` to any static host.
+3. Post the hook with your own card attached.
+
+The shared code (calendar parser, card drawing, styles) lives in `../shared` in the lab and is inlined into each page by `build.py`. After editing anything in `src` or `shared`, run `python3 build.py` from the lab folder.
+
+## Use it with an AI assistant
+
+The matching skill, `../skills/meeting-receipt/SKILL.md`, does the same from a connected account, without exporting a file.
