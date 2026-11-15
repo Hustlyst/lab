@@ -26,7 +26,9 @@ main{max-width:980px;margin:0 auto;padding:18px 16px 64px}
 h1{font:900 clamp(30px,5vw,46px)/1.05 "Arial Rounded MT Bold","Trebuchet MS",sans-serif;margin:0 0 10px;letter-spacing:0}
 h2,h3{font-family:"Arial Rounded MT Bold","Trebuchet MS",sans-serif;font-weight:900}
 .sub{color:var(--ink2);margin:0 0 24px;max-width:58ch;font-size:18px}
-.grid{display:grid;gap:24px;grid-template-columns:1fr}
+/* minmax(0,1fr), not 1fr: a 1fr column cannot shrink below its widest content,
+   so one long word in a tool could push the whole page past a phone's edge. */
+.grid{display:grid;gap:24px;grid-template-columns:minmax(0,1fr)}
 @media(min-width:860px){.grid{grid-template-columns:minmax(0,1fr) 420px;align-items:start}}
 .card{background:var(--card);border:2px solid var(--line);border-radius:12px;padding:20px;box-shadow:5px 5px 0 var(--shadow)}
 .drop{border:2px dashed var(--dash);border-radius:12px;padding:26px 16px;text-align:center;cursor:pointer;transition:.15s;background:var(--bg)}
@@ -65,10 +67,12 @@ a{color:var(--ac-text)}
 <h1>Meeting Bingo</h1>
 <p class="sub">Click a phrase when you hear it. Five in a row wins. Share the link and your friends get the exact same card.</p>
 <style>
-.board{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-width:460px;margin:0 auto}
-.cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12.5px;line-height:1.2;padding:4px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;max-width:460px;margin:0 auto}
+.cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12.5px;line-height:1.2;padding:4px;overflow-wrap:break-word;hyphens:auto;-webkit-hyphens:auto;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
 .cell.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
 .cell.win{outline:3px solid var(--ink)}
+@media(max-width:420px){.board{gap:4px}.cell{font-size:10px;padding:2px}}
+@media(max-width:370px){.cell{overflow-wrap:anywhere}}
 .banner{text-align:center;font-weight:800;font-size:22px;min-height:32px;margin-bottom:10px;color:var(--accent)}
 </style>
 <div class="grid">
