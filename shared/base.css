@@ -24,7 +24,9 @@ main{max-width:980px;margin:0 auto;padding:18px 16px 64px}
 h1{font:900 clamp(30px,5vw,46px)/1.05 "Arial Rounded MT Bold","Trebuchet MS",sans-serif;margin:0 0 10px;letter-spacing:0}
 h2,h3{font-family:"Arial Rounded MT Bold","Trebuchet MS",sans-serif;font-weight:900}
 .sub{color:var(--ink2);margin:0 0 24px;max-width:58ch;font-size:18px}
-.grid{display:grid;gap:24px;grid-template-columns:1fr}
+/* minmax(0,1fr), not 1fr: a 1fr column cannot shrink below its widest content,
+   so one long word in a tool could push the whole page past a phone's edge. */
+.grid{display:grid;gap:24px;grid-template-columns:minmax(0,1fr)}
 @media(min-width:860px){.grid{grid-template-columns:minmax(0,1fr) 420px;align-items:start}}
 .card{background:var(--card);border:2px solid var(--line);border-radius:12px;padding:20px;box-shadow:5px 5px 0 var(--shadow)}
 .drop{border:2px dashed var(--dash);border-radius:12px;padding:26px 16px;text-align:center;cursor:pointer;transition:.15s;background:var(--bg)}
