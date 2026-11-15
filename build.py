@@ -34,6 +34,19 @@ META = {
  'linkedin-wrapped': ('LinkedIn Wrapped', 'Your LinkedIn year as a shareable card: new connections, posts, reactions and comments. Totals only, never names.', 'LinkedIn data export CSVs: Connections.csv and optionally Shares, Reactions, Comments', 'LinkedIn: Settings, Data privacy, Get a copy of your data.', 'I made N new connections on LinkedIn this year. Card inside.'),
 }
 
+def og(title, desc):
+    t, d = html.escape(title, True), html.escape(desc, True)
+    return ('<meta property="og:type" content="website"><meta property="og:title" content="%s">'
+            '<meta property="og:description" content="%s"><meta name="twitter:card" content="summary">'
+            '<meta name="twitter:title" content="%s"><meta name="twitter:description" content="%s">' % (t, d, t, d))
+
+GROUPS = [
+ ('Your calendar', ['meeting-receipt', 'work-wrapped', 'calendar-horoscope', 'could-it-be-an-email']),
+ ('Your streaming and reading', ['binge-receipt', 'listening-receipt', 'shelf-receipt']),
+ ('Your inbox, chats and feeds', ['inbox-receipt', 'chat-awards', 'linkedin-wrapped', 'fitness-wrapped']),
+ ('Play and make', ['meeting-bingo', 'buzzword-decoder', 'daily-guess', 'dither-booth', 'receipt-of-me']),
+]
+
 def build():
     shared = {'/*@ICS*/': rd('shared', 'ics.js'), '/*@CARD*/': rd('shared', 'card.js')}
     css = rd('shared', 'base.css')
@@ -50,8 +63,8 @@ def build():
         src = src.replace('<!--@ICSDROP-->', ICSDROP).replace('<!--@ACTIONS-->', ACTIONS).replace('<!--@FOOT-->', FOOT)
         page = ('<!doctype html>\n<html lang="en"><head><meta charset="utf-8">'
                 '<meta name="viewport" content="width=device-width, initial-scale=1">'
-                '<title>%s</title><meta name="description" content="%s">\n<style>%s</style></head>\n<body><main>\n%s\n</main></body></html>\n'
-                % (html.escape(t), html.escape(d), css, src))
+                '<title>%s</title><meta name="description" content="%s">%s\n<style>%s</style></head>\n<body><main>\n%s\n</main></body></html>\n'
+                % (html.escape(t), html.escape(d), og(t, d), css, src))
         os.makedirs(os.path.join(ROOT, slug), exist_ok=True)
         open(os.path.join(ROOT, slug, 'index.html'), 'w', encoding='utf-8').write(page)
         readme = f'''# {title}
@@ -85,16 +98,18 @@ The shared code (calendar parser, card drawing, styles) lives in `../shared` in 
         open(os.path.join(ROOT, slug, 'README.md'), 'w', encoding='utf-8').write(readme)
         print('built', slug)
     # hub
-    cards = ''.join(
-        '<a class="t" href="%s/index.html"><b>%s</b><span>%s</span></a>' % (s, html.escape(v[0]), html.escape(v[1]))
-        for s, v in META.items() if os.path.exists(os.path.join(ROOT, s, 'index.html')))
+    tile = lambda sl: ('<a class="t" href="%s/index.html"><b>%s</b><span>%s</span></a>' % (sl, html.escape(META[sl][0]), html.escape(META[sl][1]))
+                       if os.path.exists(os.path.join(ROOT, sl, 'index.html')) else '')
+    cards = ''.join('<h2>%s</h2><div class="tiles">%s</div>' % (g, ''.join(tile(x) for x in sl)) for g, sl in GROUPS)
+    assert sorted(x for _, sl in GROUPS for x in sl) == sorted(META), 'every tool must be in a hub group'
     hub = ('<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
-           '<title>The Lab</title><meta name="description" content="Small free tools that turn your own data into something worth sharing. Everything runs in your browser.">\n'
-           '<style>%s.tiles{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}'
+           '<title>The Lab</title><meta name="description" content="Small free tools that turn your own data into something worth sharing. Everything runs in your browser.">'
+           + og('The Lab', 'Small free tools that turn your own data into something worth sharing. Everything runs in your browser.') + '\n'
+           '<style>%s.hub h2{font-size:15px;color:var(--mute);margin:28px 0 10px;font-weight:600}.tiles{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}'
            '.t{display:block;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;text-decoration:none;color:var(--ink)}'
            '.t:hover{border-color:var(--accent)}.t b{display:block;font-size:18px;margin-bottom:4px}.t span{color:var(--mute);font-size:14px}</style></head>\n'
-           '<body><main><h1>The Lab</h1><p class="sub">Small, free tools that turn your own data into something worth sharing. Everything runs in your browser. Nothing is uploaded.</p>'
-           '<div class="tiles">%s</div><p class="priv">No accounts, no tracking, no network calls.</p></main></body></html>\n' % (css, cards))
+           '<body><main class="hub"><h1>The Lab</h1><p class="sub">Small, free tools that turn your own data into something worth sharing. Everything runs in your browser. Nothing is uploaded.</p>'
+           '%s<p class="priv">No accounts, no tracking, no network calls.</p></main></body></html>\n' % (css, cards))
     open(os.path.join(ROOT, 'index.html'), 'w', encoding='utf-8').write(hub)
 
 if __name__ == '__main__':
