@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Work Wrapped</title><meta name="description" content="Your year in meetings, as a shareable card. Runs in your browser."><meta property="og:type" content="website"><meta property="og:title" content="Work Wrapped"><meta property="og:description" content="Your year in meetings, as a shareable card. Runs in your browser."><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Work Wrapped"><meta name="twitter:description" content="Your year in meetings, as a shareable card. Runs in your browser."><script>try{var t=localStorage.getItem("lab-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Work Wrapped</title><meta name="description" content="Your year in meetings, as a shareable card. Runs in your browser."><meta property="og:type" content="website"><meta property="og:title" content="Work Wrapped"><meta property="og:description" content="Your year in meetings, as a shareable card. Runs in your browser."><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Work Wrapped"><meta name="twitter:description" content="Your year in meetings, as a shareable card. Runs in your browser."><script>try{var t=localStorage.getItem("hustlyst-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 <style>:root{--bg:#f4f1ea;--ink:#1c1b19;--mute:#6f6a60;--card:#fffdf8;--line:#d9d3c5;--accent:#c2410c}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#161513;--ink:#ece8de;--mute:#9a9486;--card:#1f1e1b;--line:#37342d;--accent:#fb923c}}
 :root[data-theme=dark]{--bg:#161513;--ink:#ece8de;--mute:#9a9486;--card:#1f1e1b;--line:#37342d;--accent:#fb923c;color-scheme:dark}
@@ -337,6 +337,6 @@ var gone=function(){var x=document.getElementById('samplenote');if(x)x.remove()}
 if(f)f.addEventListener('change',gone);if(d)d.addEventListener('drop',gone)}}var r=document.documentElement,b=document.createElement('button');b.className='theme';b.type='button';
 function eff(){return r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}
 function lab(){b.textContent=eff()==='dark'?'Light mode':'Dark mode'}
-b.onclick=function(){var n=eff()==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('lab-theme',n)}catch(e){}lab()};
+b.onclick=function(){var n=eff()==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('hustlyst-theme',n)}catch(e){}lab()};
 lab();document.body.appendChild(b);})()</script>
 </main></body></html>

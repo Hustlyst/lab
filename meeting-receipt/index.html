@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Meeting Receipt</title><script>try{var t=localStorage.getItem("lab-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<title>Meeting Receipt</title><script>try{var t=localStorage.getItem("hustlyst-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 <meta name="description" content="Drop in your calendar and get a receipt for what your meetings really cost. Runs in your browser. Nothing is uploaded.">
 <meta property="og:type" content="website"><meta property="og:title" content="Meeting Receipt"><meta property="og:description" content="Drop in your calendar and get a receipt for what your meetings really cost. Runs in your browser. Nothing is uploaded."><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Meeting Receipt"><meta name="twitter:description" content="Drop in your calendar and get a receipt for what your meetings really cost. Runs in your browser. Nothing is uploaded.">
 <style>
@@ -381,7 +381,7 @@ window.__mr={parseICS:parseICS,analyse:analyse,occurrences:occurrences,load:load
 var r=document.documentElement,b=document.createElement('button');b.className='theme';b.type='button';
 function eff(){return r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}
 function lab(){b.textContent=eff()==='dark'?'Light mode':'Dark mode'}
-b.onclick=function(){var n=eff()==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('lab-theme',n)}catch(e){}lab()};
+b.onclick=function(){var n=eff()==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('hustlyst-theme',n)}catch(e){}lab()};
 lab();document.body.appendChild(b);
 var png=document.getElementById('png'),sh=document.getElementById('share');
 if(sh&&navigator.share){sh.hidden=false;sh.disabled=png.disabled;new MutationObserver(function(){sh.disabled=png.disabled}).observe(png,{attributes:true});
