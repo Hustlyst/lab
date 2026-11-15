@@ -1,0 +1,36 @@
+name: Submit an idea
+description: Suggest the next experiment for the Lab
+title: "Idea: "
+labels: ["idea"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for the idea. Please do not include anyone's personal data here.
+  - type: input
+    id: name
+    attributes:
+      label: What would it be called?
+      placeholder: Calendar Horoscope
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What does it do, in a sentence or two?
+    validations:
+      required: true
+  - type: input
+    id: data
+    attributes:
+      label: What data or file does it use, if any?
+      description: For example a Netflix export, a calendar file, or nothing at all.
+  - type: textarea
+    id: fun
+    attributes:
+      label: What makes it fun or worth sharing?
+  - type: checkboxes
+    id: help
+    attributes:
+      label: Want to build it yourself?
+      options:
+        - label: I would like to help build it
