@@ -1,10 +1,10 @@
 # Lab
 
-[![build](https://github.com/theAnirudhKumar/lab/actions/workflows/build.yml/badge.svg)](https://github.com/theAnirudhKumar/lab/actions/workflows/build.yml)
+[![build](https://github.com/Hustlyst/lab/actions/workflows/build.yml/badge.svg)](https://github.com/Hustlyst/lab/actions/workflows/build.yml)
 
 Small, free tools that turn your own data into something worth sharing. Sixteen of them, plus five skills for the same ideas inside an AI tool. Everything runs in the browser, nothing is uploaded, and each tool is one file with no dependencies.
 
-**Try it: https://theanirudhkumar.github.io/lab/**
+**Try it: https://hustlyst.github.io/lab/**
 
 ![The Lab hub, with the tools grouped by what they read](docs/hub.png)
 
