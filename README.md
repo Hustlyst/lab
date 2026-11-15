@@ -1,8 +1,14 @@
 # Lab
 
+[![build](https://github.com/theAnirudhKumar/lab/actions/workflows/build.yml/badge.svg)](https://github.com/theAnirudhKumar/lab/actions/workflows/build.yml)
+
 Small, free tools that turn your own data into something worth sharing. Sixteen of them, plus five skills for the same ideas inside an AI tool. Everything runs in the browser, nothing is uploaded, and each tool is one file with no dependencies.
 
-Open `index.html` for the hub, or turn on GitHub Pages (main branch, root) and share the link.
+**Try it: https://theanirudhkumar.github.io/lab/**
+
+![The Lab hub, with the tools grouped by what they read](docs/hub.png)
+
+To host your own copy, turn on GitHub Pages (main branch, root). To use one locally, open its `index.html`.
 
 ## Tools
 
@@ -31,6 +37,8 @@ Open `index.html` for the hub, or turn on GitHub Pages (main branch, root) and s
 
 `skills/` holds `meeting-receipt`, `work-wrapped`, `calendar-horoscope`, `could-it-be-an-email` and `inbox-receipt`. Each reads a connected calendar or mail account read-only, or an uploaded file, and asks for the hourly rate where money is involved. None sends, edits or deletes anything.
 
+Each skill is a folder with one `SKILL.md`. In Claude Code, copy the folder into `~/.claude/skills/`. In other tools, add it the way that tool adds skills.
+
 ## How it is built
 
 `shared/` holds the calendar parser (`ics.js`), the card and receipt drawing (`card.js`) and the styles (`base.css`). `src/` holds one source file per tool. `build.py` inlines the shared code and writes each tool's `index.html` and `README.md`, plus the hub `index.html`. `meeting-receipt` is hand-written and left alone.
@@ -45,16 +53,16 @@ Edit `src` or `shared`, never the generated pages. CI fails if the generated pag
 
 Each folder is self-contained. To give a tool its own repository, copy its folder, turn on GitHub Pages and you are done.
 
-## Known limits
+## Limits
 
-- Strava, Apple Health, Goodreads, Letterboxd, Spotify and WhatsApp exports change format from time to time. The parsers follow the layouts as known and were tested on hand-made files in those shapes, not on real exports.
-- WhatsApp day and month order is guessed from the dates in the file. If every date is ambiguous it defaults to month first.
-- Daily puzzle facts and city coordinates were written from memory and need a spot-check before launch.
+- Strava, Apple Health, Goodreads, Letterboxd, Spotify and WhatsApp change their export formats now and then. The parsers follow the layouts as documented and were tested on hand-made sample files, so a real export may need a fix. Please open an issue with the first few lines of the file, with personal details removed.
+- WhatsApp day and month order is guessed from the dates in the file. If every date is ambiguous it assumes month first.
 - Monthly calendar rules such as "second Tuesday" are approximated, and times use wall-clock time.
 - "Could be an email" is a rule of thumb, not a verdict.
-- Tested from local files in headless Chromium on sample data. Not yet tested on a hosted page or on real exports.
 
-The research and launch plan are in `docs/next-project-plan.md`.
+## Contributing
+
+See `CONTRIBUTING.md`.
 
 ## Licence
 
