@@ -55,6 +55,7 @@ a{color:var(--accent)}
 var $=function(id){return document.getElementById(id)};
 var DAY=864e5;
 function parseCSV(t){
+  if(t.charCodeAt(0)===0xFEFF) t=t.slice(1);
   var out=[],row=[],f='',q=false;
   for(var i=0;i<t.length;i++){var c=t[i];
     if(q){ if(c==='"'){ if(t[i+1]==='"'){f+='"';i++} else q=false } else f+=c }
