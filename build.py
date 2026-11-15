@@ -11,7 +11,7 @@ rd = lambda *p: open(os.path.join(ROOT, *p), encoding='utf-8').read()
 
 ICSDROP = '''<div class="drop" id="drop" tabindex="0" role="button" aria-label="Choose a calendar file"><strong>Drop a calendar file here</strong><span>.ics export from Google Calendar, Outlook or Apple Calendar. Or click to choose.</span><input id="file" type="file" accept=".ics,text/calendar" hidden></div>
 <div class="btns"><button id="sample">Try with a sample calendar</button></div><div class="err" id="err" role="alert"></div>'''
-ACTIONS = '<div class="btns" style="justify-content:center"><button class="primary" id="png" disabled>Download image</button><button id="copy" disabled>Copy text</button></div>'
+ACTIONS = '<div class="btns" style="justify-content:center"><button class="primary" id="png" disabled>Download image</button><button id="copy" disabled>Copy text</button><button id="share" hidden disabled>Share</button></div>'
 FOOT = '<p class="priv">Runs entirely in your browser. Nothing is uploaded and there is no tracking.</p>'
 
 # slug: (title, one-line pitch, input, how to get it, hook for the launch post)
@@ -33,6 +33,23 @@ META = {
  'daily-guess': ('Daily Guess', 'Five daily guesses, three years and two distances, the same for everyone. Emoji grid to share.', 'Nothing', 'Open it once a day.', 'Daily Guess 11/15. Beat me.'),
  'linkedin-wrapped': ('LinkedIn Wrapped', 'Your LinkedIn year as a shareable card: new connections, posts, reactions and comments. Totals only, never names.', 'LinkedIn data export CSVs: Connections.csv and optionally Shares, Reactions, Comments', 'LinkedIn: Settings, Data privacy, Get a copy of your data.', 'I made N new connections on LinkedIn this year. Card inside.'),
 }
+
+THEME_INIT = '<script>try{var t=localStorage.getItem("lab-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>'
+THEME_JS = '''var r=document.documentElement,b=document.createElement('button');b.className='theme';b.type='button';
+function eff(){return r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}
+function lab(){b.textContent=eff()==='dark'?'Light mode':'Dark mode'}
+b.onclick=function(){var n=eff()==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('lab-theme',n)}catch(e){}lab()};
+lab();document.body.appendChild(b);'''
+TOOL_JS = '''var png=document.getElementById('png'),sh=document.getElementById('share'),out=document.getElementById('out');
+if(sh&&navigator.share){sh.hidden=false;sh.disabled=png.disabled;new MutationObserver(function(){sh.disabled=png.disabled}).observe(png,{attributes:true});
+sh.onclick=function(){var cv=out.querySelector('canvas');if(!cv)return;var u='https://theanirudhkumar.github.io/lab/';
+cv.toBlob(function(bl){var d={files:[new File([bl],'lab.png',{type:'image/png'})],text:'Made with the Lab '+u};
+(navigator.canShare&&navigator.canShare(d)?navigator.share(d):navigator.share({text:'Made with the Lab',url:u})).catch(function(){})})}}
+var sm=document.getElementById('sample');
+if(sm&&out&&!out.querySelector('canvas')){sm.click();{var n=document.createElement('p');n.className='priv';n.id='samplenote';n.textContent='Showing sample data. Add your own file to see yours.';out.parentNode.insertBefore(n,out);
+var gone=function(){var x=document.getElementById('samplenote');if(x)x.remove()};var f=document.getElementById('file'),d=document.getElementById('drop');
+if(f)f.addEventListener('change',gone);if(d)d.addEventListener('drop',gone)}}'''
+def script(js): return '<script>(function(){' + js + '})()</script>'
 
 def og(title, desc):
     t, d = html.escape(title, True), html.escape(desc, True)
@@ -61,10 +78,13 @@ def build():
         for k, v in shared.items():
             src = src.replace(k, v)
         src = src.replace('<!--@ICSDROP-->', ICSDROP).replace('<!--@ACTIONS-->', ACTIONS).replace('<!--@FOOT-->', FOOT)
+        if not inp.startswith('Nothing'):
+            src = re.sub(r'(<p class="sub">.*?</p>)', lambda mm: mm.group(1) + '<p class="priv offline">Works offline. Your file is read in this browser and never uploaded.</p>', src, count=1, flags=re.S)
+        src += script(TOOL_JS + THEME_JS)
         page = ('<!doctype html>\n<html lang="en"><head><meta charset="utf-8">'
                 '<meta name="viewport" content="width=device-width, initial-scale=1">'
                 '<title>%s</title><meta name="description" content="%s">%s\n<style>%s</style></head>\n<body><main>\n%s\n</main></body></html>\n'
-                % (html.escape(t), html.escape(d), og(t, d), css, src))
+                % (html.escape(t), html.escape(d), og(t, d) + THEME_INIT, css, src))
         os.makedirs(os.path.join(ROOT, slug), exist_ok=True)
         open(os.path.join(ROOT, slug, 'index.html'), 'w', encoding='utf-8').write(page)
         readme = f'''# {title}
@@ -104,12 +124,13 @@ The shared code (calendar parser, card drawing, styles) lives in `../shared` in 
     assert sorted(x for _, sl in GROUPS for x in sl) == sorted(META), 'every tool must be in a hub group'
     hub = ('<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
            '<title>The Lab</title><meta name="description" content="Small free tools that turn your own data into something worth sharing. Everything runs in your browser.">'
-           + og('The Lab', 'Small free tools that turn your own data into something worth sharing. Everything runs in your browser.') + '\n'
-           '<style>%s.hub h2{font-size:15px;color:var(--mute);margin:28px 0 10px;font-weight:600}.tiles{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}'
+           + og('The Lab', 'Small free tools that turn your own data into something worth sharing. Everything runs in your browser.') + THEME_INIT + '\n'
+           '<style>@@CSS@@.hub h2{font-size:15px;color:var(--mute);margin:28px 0 10px;font-weight:600}.tiles{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}'
            '.t{display:block;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;text-decoration:none;color:var(--ink)}'
            '.t:hover{border-color:var(--accent)}.t b{display:block;font-size:18px;margin-bottom:4px}.t span{color:var(--mute);font-size:14px}</style></head>\n'
            '<body><main class="hub"><h1>The Lab</h1><p class="sub">Small, free tools that turn your own data into something worth sharing. Everything runs in your browser. Nothing is uploaded.</p>'
-           '%s<p class="priv">No accounts, no tracking, no network calls.</p></main></body></html>\n' % (css, cards))
+           '@@CARDS@@<p class="priv">No accounts, no tracking, no network calls.</p></main>@@JS@@</body></html>\n')
+    hub = hub.replace('@@CSS@@', css).replace('@@CARDS@@', cards).replace('@@JS@@', script(THEME_JS))
     open(os.path.join(ROOT, 'index.html'), 'w', encoding='utf-8').write(hub)
 
 if __name__ == '__main__':
